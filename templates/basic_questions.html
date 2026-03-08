@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lifestyle Questions — AI Mental Health</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .q-header { text-align: center; margin-bottom: 2rem; }
+    .q-header h2 { margin-bottom: 0.4rem; }
+    .q-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .q-grid .form-group { margin-bottom: 0; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin: 1.2rem 0 0.7rem;
+    }
+    @media(max-width:560px) { .q-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="page" style="align-items:flex-start;padding-top:3rem">
+    <div class="page-inner" style="max-width:700px">
+      <div class="card">
+        <!-- Progress -->
+        <div class="steps" style="justify-content:flex-start;gap:0.4rem;margin-bottom:0.5rem">
+          <span class="tag">Step 1 of 3</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar" data-progress="33" style="width:0%"></div>
+        </div>
+
+        <div class="q-header">
+          <div style="font-size:2rem;margin-bottom:0.4rem">📋</div>
+          <h2>Lifestyle & Background</h2>
+          <p>Tell us a bit about your daily habits so we can personalise your assessment.</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('basic_questions') }}">
+          <p class="section-label">Personal Info</p>
+          <div class="q-grid">
+            <div class="form-group">
+              <label for="age">Age</label>
+              <input type="number" id="age" name="age" min="10" max="100" value="25" required>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender">
+                <option value="0">Male</option>
+                <option value="1">Female</option>
+                <option value="2">Non-binary / Other</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="section-label">Daily Habits</p>
+          <div class="form-group">
+            <label>Sleep Hours per Night: <span id="sleep_hours_val" style="color:var(--primary);font-weight:700">7</span>h</label>
+            <div class="slider-row">
+              <span style="font-size:0.8rem;color:var(--text-light)">3h</span>
+              <input type="range" id="sleep_hours" name="sleep_hours" min="3" max="12" step="0.5" value="7">
+              <span style="font-size:0.8rem;color:var(--text-light)">12h</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Work / Study Hours per Day: <span id="work_hours_val" style="color:var(--primary);font-weight:700">8</span>h</label>
+            <div class="slider-row">
+              <span style="font-size:0.8rem;color:var(--text-light)">0h</span>
+              <input type="range" id="work_hours" name="work_hours" min="0" max="16" step="0.5" value="8">
+              <span style="font-size:0.8rem;color:var(--text-light)">16h</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Physical Activity Days per Week: <span id="physical_activity_val" style="color:var(--primary);font-weight:700">3</span> days</label>
+            <div class="slider-row">
+              <span style="font-size:0.8rem;color:var(--text-light)">0</span>
+              <input type="range" id="physical_activity" name="physical_activity" min="0" max="7" step="1" value="3">
+              <span style="font-size:0.8rem;color:var(--text-light)">7</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Screen Time per Day: <span id="screen_time_val" style="color:var(--primary);font-weight:700">4</span>h</label>
+            <div class="slider-row">
+              <span style="font-size:0.8rem;color:var(--text-light)">0h</span>
+              <input type="range" id="screen_time" name="screen_time" min="0" max="16" step="0.5" value="4">
+              <span style="font-size:0.8rem;color:var(--text-light)">16h</span>
+            </div>
+          </div>
+
+          <p class="section-label">Social & Stress</p>
+          <div class="form-group">
+            <label>Social Interaction Score (0 = very isolated, 10 = very social): <span id="social_interaction_val" style="color:var(--primary);font-weight:700">5</span></label>
+            <div class="slider-row">
+              <span style="font-size:0.8rem;color:var(--text-light)">0</span>
+              <input type="range" id="social_interaction" name="social_interaction" min="0" max="10" step="1" value="5">
+              <span style="font-size:0.8rem;color:var(--text-light)">10</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Stress Level (1 = minimal, 10 = extreme): <span id="stress_level_val" style="color:var(--primary);font-weight:700">5</span></label>
+            <div class="slider-row">
+              <span style="font-size:0.8rem;color:var(--text-light)">1</span>
+              <input type="range" id="stress_level" name="stress_level" min="1" max="10" step="1" value="5">
+              <span style="font-size:0.8rem;color:var(--text-light)">10</span>
+            </div>
+          </div>
+
+          <p class="section-label">Consumption</p>
+          <div class="q-grid">
+            <div class="form-group">
+              <label>Caffeine (cups/day): <span id="caffeine_val" style="color:var(--primary);font-weight:700">2</span></label>
+              <input type="range" id="caffeine" name="caffeine" min="0" max="5" step="1" value="2">
+            </div>
+            <div class="form-group">
+              <label>Alcohol (drinks/day): <span id="alcohol_val" style="color:var(--primary);font-weight:700">1</span></label>
+              <input type="range" id="alcohol" name="alcohol" min="0" max="5" step="1" value="1">
+            </div>
+          </div>
+
+          <p class="section-label">Mental Health History</p>
+          <div class="q-grid">
+            <div class="form-group">
+              <label for="family_history">Family History of Mental Health Issues?</label>
+              <select id="family_history" name="family_history">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="therapy_history">Previous Therapy / Counseling?</label>
+              <select id="therapy_history" name="therapy_history">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:1rem">
+            Next: Anxiety Assessment →
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    // Live sliders
+    ['sleep_hours','work_hours','physical_activity','screen_time','social_interaction','stress_level','caffeine','alcohol'].forEach(id => {
+      const el = document.getElementById(id);
+      const val = document.getElementById(id + '_val');
+      if (el && val) {
+        val.textContent = el.value;
+        el.addEventListener('input', () => val.textContent = el.value);
+      }
+    });
+  </script>
+</body>
+</html>

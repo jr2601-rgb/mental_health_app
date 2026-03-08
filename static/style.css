@@ -1,0 +1,559 @@
+/* ═══════════════════════════════════════════════════════
+   AI Mental Health Assessment — Global Styles
+   Font: DM Sans (display) + Lora (body)
+   Theme: Soft teal-indigo medical wellness
+════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+/* ── Variables ─────────────────────────────────────── */
+:root {
+  --primary:      #4F46E5;
+  --primary-dark: #3730A3;
+  --primary-light:#818CF8;
+  --accent:       #22C55E;
+  --accent-dark:  #16A34A;
+  --danger:       #EF4444;
+  --warning:      #F59E0B;
+  --bg-from:      #89f7fe;
+  --bg-to:        #66a6ff;
+  --glass-bg:     rgba(255,255,255,0.18);
+  --glass-border: rgba(255,255,255,0.35);
+  --text-dark:    #1e1b4b;
+  --text-mid:     #4b5563;
+  --text-light:   #9ca3af;
+  --white:        #ffffff;
+  --card-shadow:  0 20px 60px rgba(79,70,229,0.15);
+  --radius:       20px;
+  --radius-sm:    12px;
+  --transition:   0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-dark);
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
+  overflow-x: hidden;
+}
+
+/* ── Typography ────────────────────────────────────── */
+h1, h2, h3 { font-weight: 700; line-height: 1.2; }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+h3 { font-size: 1.2rem; }
+p  { line-height: 1.7; color: var(--text-mid); }
+
+/* ── Page Wrapper ──────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.page-inner {
+  width: 100%;
+  max-width: 780px;
+  position: relative;
+  z-index: 2;
+  animation: pageIn 0.7s var(--transition) both;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Animated Blobs ────────────────────────────────── */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  animation: blobFloat 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob-1 { width: 400px; height: 400px; background: var(--primary-light); top: -100px; left: -100px; animation-delay: 0s; }
+.blob-2 { width: 350px; height: 350px; background: var(--accent);        bottom: -80px; right: -80px; animation-delay: -3s; }
+.blob-3 { width: 280px; height: 280px; background: #f0abfc;              top: 50%; left: 60%; animation-delay: -5s; }
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -30px) scale(1.05); }
+  66%       { transform: translate(-15px, 20px) scale(0.95); }
+}
+
+/* ── Glass Card ────────────────────────────────────── */
+.card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 32px 80px rgba(79,70,229,0.2); }
+.card-sm { padding: 1.5rem; border-radius: var(--radius-sm); }
+
+/* ── Buttons ───────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.15);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.btn:hover::after { opacity: 1; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--white);
+  box-shadow: 0 8px 25px rgba(79,70,229,0.4);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(79,70,229,0.5); }
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: var(--white);
+  box-shadow: 0 8px 25px rgba(34,197,94,0.4);
+}
+.btn-accent:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(34,197,94,0.5); }
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+.btn-outline:hover { background: var(--primary); color: var(--white); }
+.btn-lg { padding: 1rem 2.5rem; font-size: 1.1rem; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ── Progress Bar ──────────────────────────────────── */
+.progress-wrap {
+  background: rgba(255,255,255,0.4);
+  border-radius: 100px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 100px;
+  transition: width 0.6s ease;
+  box-shadow: 0 0 12px rgba(79,70,229,0.5);
+}
+
+/* ── Form Elements ─────────────────────────────────── */
+.form-group { margin-bottom: 1.4rem; }
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 0.45rem;
+  color: var(--text-dark);
+}
+input[type=text], input[type=email], input[type=password],
+input[type=number], select, textarea {
+  width: 100%;
+  padding: 0.8rem 1.1rem;
+  border: 2px solid rgba(79,70,229,0.15);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.9);
+  color: var(--text-dark);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(79,70,229,0.12);
+}
+input[type=range] {
+  width: 100%;
+  accent-color: var(--primary);
+  height: 6px;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+/* ── Radio / Score Buttons ─────────────────────────── */
+.score-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.score-btn {
+  flex: 1; min-width: 60px;
+  padding: 0.6rem 0.3rem;
+  border: 2px solid rgba(79,70,229,0.2);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.7);
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.82rem;
+  transition: all var(--transition);
+  color: var(--text-mid);
+}
+.score-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(79,70,229,0.08); }
+.score-btn.selected {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+}
+
+/* ── Nav dots / Step indicator ─────────────────────── */
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+.step-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(79,70,229,0.25);
+  transition: all var(--transition);
+}
+.step-dot.active {
+  background: var(--primary);
+  transform: scale(1.4);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.2);
+}
+.step-dot.done { background: var(--accent); }
+
+/* ── Badge ─────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.badge-healthy  { background: rgba(34,197,94,0.15);  color: #16A34A; }
+.badge-moderate { background: rgba(245,158,11,0.15); color: #D97706; }
+.badge-high     { background: rgba(239,68,68,0.15);  color: #DC2626; }
+
+/* ── Score Meter ───────────────────────────────────── */
+.meter-wrap {
+  position: relative;
+  width: 160px; height: 80px;
+  margin: 0 auto 0.8rem;
+}
+.meter-track {
+  width: 160px; height: 80px;
+  border-radius: 80px 80px 0 0;
+  background: conic-gradient(
+    from 180deg,
+    #22C55E 0deg 72deg,
+    #F59E0B 72deg 144deg,
+    #EF4444 144deg 180deg,
+    transparent 180deg
+  );
+  position: relative;
+  overflow: hidden;
+}
+.meter-needle {
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 4px; height: 68px;
+  background: var(--text-dark);
+  transform-origin: bottom center;
+  border-radius: 4px;
+  transition: transform 1.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* ── Suggestion Cards ──────────────────────────────── */
+.suggestion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.suggestion-card {
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(79,70,229,0.1);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  text-align: center;
+  transition: all var(--transition);
+  animation: cardIn 0.5s ease both;
+}
+.suggestion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(79,70,229,0.15);
+  border-color: var(--primary);
+}
+.suggestion-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.suggestion-card h4 { font-size: 0.9rem; margin-bottom: 0.3rem; color: var(--text-dark); }
+.suggestion-card p  { font-size: 0.8rem; color: var(--text-mid); line-height: 1.5; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Alert ─────────────────────────────────────────── */
+.alert {
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.alert-error { background: rgba(239,68,68,0.12); color: #DC2626; border: 1px solid rgba(239,68,68,0.25); }
+
+/* ── Confetti canvas ───────────────────────────────── */
+#confetti-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ── Divider ───────────────────────────────────────── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  margin: 1rem 0;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(79,70,229,0.15);
+}
+
+/* ── Tag ───────────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 100px;
+  background: rgba(79,70,229,0.1);
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ── Slider display value ──────────────────────────── */
+.slider-row { display: flex; align-items: center; gap: 1rem; }
+.slider-val {
+  min-width: 2.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1.1rem;
+  background: rgba(79,70,229,0.1);
+  border-radius: 8px;
+  padding: 0.2rem 0.4rem;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 600px) {
+  .card { padding: 1.5rem; }
+  .suggestion-grid { grid-template-columns: 1fr 1fr; }
+  .score-group { gap: 0.3rem; }
+  .score-btn { font-size: 0.72rem; padding: 0.5rem 0.2rem; }
+}
+
+
+/* ═══════════════════════════════════════════════════
+   FULL MOBILE RESPONSIVE STYLES
+   Covers phones (320px+) and tablets (768px+)
+════════════════════════════════════════════════════ */
+
+/* ── Tablet (768px and below) ──────────────────────── */
+@media (max-width: 768px) {
+
+  /* Page padding */
+  .page { padding: 1.5rem 1rem; }
+  .page-inner { max-width: 100% !important; }
+
+  /* Cards */
+  .card { padding: 1.8rem 1.5rem; border-radius: 16px; }
+
+  /* Typography */
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  p  { font-size: 0.95rem; }
+
+  /* Dashboard grid — 2 columns on tablet */
+  .dash-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Score cards on result page */
+  .score-cards { grid-template-columns: 1fr 1fr; }
+
+  /* Chart row */
+  .chart-row { grid-template-columns: 1fr 1fr; }
+
+  /* Suggestion grid */
+  .suggestion-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Habit grid on ending page */
+  .habit-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Buttons */
+  .btn-lg { padding: 0.9rem 1.8rem; font-size: 1rem; }
+
+  /* Welcome page features pills */
+  .features { gap: 0.6rem; }
+  .feature-pill { font-size: 0.8rem; padding: 0.5rem 0.9rem; }
+
+  /* Name input form on welcome */
+  .name-form { max-width: 100%; }
+
+  /* Step dots */
+  .steps { gap: 0.4rem; }
+  .step-dot { width: 8px; height: 8px; }
+}
+
+/* ── Mobile (480px and below) ──────────────────────── */
+@media (max-width: 480px) {
+
+  /* Page */
+  .page { padding: 1rem 0.8rem; align-items: flex-start; padding-top: 1.5rem; }
+
+  /* Cards */
+  .card { padding: 1.3rem 1.1rem; border-radius: 14px; }
+  .card:hover { transform: none; } /* disable hover lift on touch */
+
+  /* Typography */
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  h3 { font-size: 1rem; }
+
+  /* Dashboard grid — 1 column on mobile */
+  .dash-grid { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .info-card .num { font-size: 1.5rem; }
+  .info-card .lbl { font-size: 0.72rem; }
+
+  /* Step items on dashboard */
+  .step-item { padding: 0.7rem; gap: 0.7rem; }
+  .step-icon { font-size: 1.2rem; min-width: 1.5rem; }
+  .step-text h4 { font-size: 0.82rem; }
+  .step-text p  { font-size: 0.72rem; }
+
+  /* Score buttons — 2x2 grid on small phones */
+  .score-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .score-btn { padding: 0.7rem 0.3rem; font-size: 0.8rem; border-radius: 8px; }
+  .score-btn small { font-size: 0.7rem; }
+
+  /* Question card */
+  .q-card { padding: 1.5rem 1.1rem; min-height: 240px; }
+  .q-text { font-size: 1rem; }
+
+  /* Score cards — stack on mobile */
+  .score-cards { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .score-big { font-size: 2.2rem; }
+
+  /* Charts — stack on mobile */
+  .chart-row { grid-template-columns: 1fr; }
+
+  /* Suggestions — 1 column on small phones */
+  .suggestion-grid { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .suggestion-card { padding: 0.9rem; }
+  .suggestion-card .icon { font-size: 1.5rem; }
+  .suggestion-card h4 { font-size: 0.82rem; }
+  .suggestion-card p  { font-size: 0.75rem; }
+
+  /* Habit grid on ending page */
+  .habit-grid { grid-template-columns: 1fr; gap: 0.7rem; }
+
+  /* Buttons */
+  .btn { padding: 0.75rem 1.3rem; font-size: 0.9rem; }
+  .btn-lg { padding: 0.85rem 1.5rem; font-size: 0.95rem; }
+
+  /* Nav buttons on questionnaire */
+  .nav-btns { gap: 0.5rem; }
+
+  /* Progress bar */
+  .progress-wrap { height: 6px; }
+
+  /* Slider row */
+  .slider-row { gap: 0.5rem; }
+
+  /* Form groups */
+  .form-group { margin-bottom: 1rem; }
+  input[type=text], input[type=email], input[type=password],
+  input[type=number], select {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  /* Welcome page */
+  .logo-mark { font-size: 3rem; }
+  .hero-tagline { font-size: 1rem; }
+  .hero-desc { font-size: 0.92rem; margin-bottom: 1.5rem; }
+  .feature-pill { font-size: 0.75rem; padding: 0.4rem 0.7rem; }
+
+  /* Result page actions */
+  .result-badge-big { font-size: 0.9rem; padding: 0.5rem 1.3rem; }
+
+  /* Sign out link */
+  .nav-logout { top: 1rem; right: 1rem; font-size: 0.8rem; }
+
+  /* Basic questions grid — 1 column */
+  .q-grid { grid-template-columns: 1fr !important; }
+
+  /* Tags */
+  .tag { font-size: 0.72rem; padding: 0.2rem 0.6rem; }
+
+  /* Blobs — smaller on mobile */
+  .blob-1 { width: 250px; height: 250px; }
+  .blob-2 { width: 200px; height: 200px; }
+  .blob-3 { width: 150px; height: 150px; }
+}
+
+/* ── Very small phones (360px and below) ───────────── */
+@media (max-width: 360px) {
+  .card { padding: 1.1rem 0.9rem; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.2rem; }
+  .score-group { grid-template-columns: 1fr 1fr; }
+  .dash-grid { grid-template-columns: 1fr 1fr; }
+  .score-cards { grid-template-columns: 1fr; }
+  .btn-full { padding: 0.8rem 1rem; }
+}
+
+/* ── Touch devices — remove hover effects ──────────── */
+@media (hover: none) {
+  .card:hover { transform: none; box-shadow: var(--card-shadow); }
+  .btn:hover  { transform: none; }
+  .suggestion-card:hover { transform: none; }
+}
+
+/* ── Fix iOS input zoom (font size must be 16px+) ─── */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}

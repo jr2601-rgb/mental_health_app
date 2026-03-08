@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Depression Screening — AI Mental Health</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .q-card {
+      background: rgba(255,255,255,0.75);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .q-number { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.5rem; }
+    .q-text { font-size: 1.15rem; font-weight: 600; color: var(--text-dark); margin-bottom: 1.5rem; line-height: 1.5; }
+    .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+    .q-counter { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--text-mid); }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="page">
+    <div class="page-inner" style="max-width:620px">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <span class="tag">Step 3 of 3</span>
+        <h2 style="margin-top:0.8rem">😔 Depression Screening</h2>
+        <p style="font-size:0.9rem">PHQ-9 — Patient Health Questionnaire</p>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" id="q-progress" style="width:11%;transition:width 0.5s ease"></div>
+      </div>
+
+      <div class="steps" id="step-dots">
+        {% for i in range(9) %}
+        <div class="step-dot {% if i==0 %}active{% endif %}"></div>
+        {% endfor %}
+      </div>
+
+      <form id="q-form" method="POST" action="{{ url_for('depression') }}">
+        {% set questions = [
+          "Little interest or pleasure in doing things",
+          "Feeling down, depressed, or hopeless",
+          "Trouble falling or staying asleep, or sleeping too much",
+          "Feeling tired or having little energy",
+          "Poor appetite or overeating",
+          "Feeling bad about yourself — or that you are a failure",
+          "Trouble concentrating on things, such as reading or watching television",
+          "Moving or speaking so slowly that other people have noticed. Or being so fidgety or restless that you've been moving more than usual",
+          "Thoughts that you would be better off dead, or thoughts of hurting yourself in some way"
+        ] %}
+        {% for q in questions %}
+        <div class="q-step" style="display:none">
+          <div class="q-card card">
+            <div>
+              <div class="q-number">QUESTION {{ loop.index }} OF 9</div>
+              <div class="q-text">{{ q }}</div>
+              <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem">
+                Over the <strong>last 2 weeks</strong>, how often have you been bothered by this?
+              </p>
+              <input type="hidden" name="q{{ loop.index }}" id="ans{{ loop.index }}" value="">
+              <div class="score-group" data-q="{{ loop.index }}">
+                <button type="button" class="score-btn" data-value="0">0<br><small>Not at all</small></button>
+                <button type="button" class="score-btn" data-value="1">1<br><small>Several days</small></button>
+                <button type="button" class="score-btn" data-value="2">2<br><small>Half the days</small></button>
+                <button type="button" class="score-btn" data-value="3">3<br><small>Nearly every day</small></button>
+              </div>
+              <div class="error-msg">⚠️ Please select an answer before continuing.</div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+        <div class="nav-btns">
+          <button type="button" id="q-prev" class="btn btn-outline" style="visibility:hidden">← Back</button>
+          <span class="q-counter" id="q-counter">1 / 9</span>
+          <button type="button" id="q-next" class="btn btn-primary">Next →</button>
+          <button type="button" id="q-submit" class="btn btn-accent" style="display:none">View My Results →</button>
+        </div>
+      </form>
+
+      {% if loop is defined %}{% endif %}
+      <!-- Sensitivity note for Q9 -->
+      <div id="q9-note" style="display:none;margin-top:1rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);padding:1rem;font-size:0.85rem;color:#991b1b;">
+        💙 If you are having thoughts of self-harm, please reach out to a crisis helpline or trusted person immediately. You are not alone.
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    // Wire score buttons to hidden inputs
+    document.querySelectorAll('.score-group').forEach(group => {
+      const q = group.dataset.q;
+      group.querySelectorAll('.score-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          group.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          document.getElementById('ans' + q).value = btn.dataset.value;
+          // Show sensitivity note on Q9
+          if (q === '9' && btn.dataset.value > 0) {
+            document.getElementById('q9-note').style.display = 'block';
+          } else if (q === '9') {
+            document.getElementById('q9-note').style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

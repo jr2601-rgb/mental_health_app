@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Results — AI Mental Health</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    .result-hero {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+    }
+    .result-badge-big {
+      display: inline-block;
+      padding: 0.6rem 2rem;
+      border-radius: 100px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .bg-healthy  { background: linear-gradient(135deg,#22C55E,#16A34A); color:white; box-shadow:0 8px 25px rgba(34,197,94,0.4); }
+    .bg-moderate { background: linear-gradient(135deg,#F59E0B,#D97706); color:white; box-shadow:0 8px 25px rgba(245,158,11,0.4); }
+    .bg-high     { background: linear-gradient(135deg,#EF4444,#DC2626); color:white; box-shadow:0 8px 25px rgba(239,68,68,0.4); }
+
+    .score-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .score-card {
+      background: rgba(255,255,255,0.7);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(79,70,229,0.1);
+    }
+    .score-big { font-size: 3rem; font-weight: 800; line-height: 1; }
+    .score-max { font-size: 1rem; color: var(--text-light); }
+    .score-label { font-size: 0.85rem; font-weight: 600; margin-top: 0.3rem; }
+    .score-level { font-size: 0.75rem; margin-top: 0.2rem; color: var(--text-mid); }
+
+    .anxiety-color  { color: #7C3AED; }
+    .depress-color  { color: #DB2777; }
+
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .chart-wrap { background: rgba(255,255,255,0.7); border-radius: var(--radius-sm); padding: 1rem; }
+    .chart-title { font-size: 0.85rem; font-weight: 700; text-align: center; margin-bottom: 0.8rem; color: var(--text-dark); }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin: 1.5rem 0 0.8rem;
+    }
+
+    .radar-wrap { background: rgba(255,255,255,0.7); border-radius: var(--radius-sm); padding: 1rem; margin: 1rem 0; }
+
+    @media(max-width:560px) {
+      .score-cards, .chart-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  {% if prediction == 0 %}
+  <canvas id="confetti-canvas"></canvas>
+  {% endif %}
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="page" style="align-items:flex-start;padding-top:2rem">
+    <div class="page-inner" style="max-width:740px">
+      <div class="card">
+        <!-- Hero -->
+        <div class="result-hero">
+          <div style="font-size:3rem;margin-bottom:0.5rem">
+            {% if prediction == 0 %}🌟
+            {% elif prediction == 1 %}⚠️
+            {% else %}🚨{% endif %}
+          </div>
+          <div class="result-badge-big bg-{{ prediction_color }}">{{ prediction_label }}</div>
+          <h2 style="margin-bottom:0.5rem">Hi {{ username }}, here are your results</h2>
+          <p>Based on your responses, our AI model has assessed your mental wellness profile below.</p>
+        </div>
+
+        <!-- Score Cards -->
+        <div class="score-cards">
+          <div class="score-card">
+            <div class="score-big anxiety-color">{{ anxiety_score }}</div>
+            <div class="score-max">/ 21</div>
+            <div class="score-label anxiety-color">Anxiety Score</div>
+            <div class="score-level">{{ anxiety_level }}</div>
+            <div style="margin-top:0.8rem">
+              <div class="progress-wrap" style="height:6px;background:rgba(124,58,237,0.15)">
+                <div class="progress-bar" style="width:{{ (anxiety_score/21*100)|int }}%;background:linear-gradient(90deg,#7C3AED,#a855f7)"></div>
+              </div>
+            </div>
+          </div>
+          <div class="score-card">
+            <div class="score-big depress-color">{{ depression_score }}</div>
+            <div class="score-max">/ 27</div>
+            <div class="score-label depress-color">Depression Score</div>
+            <div class="score-level">{{ depression_level }}</div>
+            <div style="margin-top:0.8rem">
+              <div class="progress-wrap" style="height:6px;background:rgba(219,39,119,0.15)">
+                <div class="progress-bar" style="width:{{ (depression_score/27*100)|int }}%;background:linear-gradient(90deg,#DB2777,#ec4899)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="chart-row">
+          <div class="chart-wrap">
+            <div class="chart-title">Anxiety Score Breakdown</div>
+            <canvas id="anxietyChart" height="180"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-title">Depression Score Breakdown</div>
+            <canvas id="depressionChart" height="180"></canvas>
+          </div>
+        </div>
+
+        <!-- Radar -->
+        <div class="radar-wrap">
+          <div class="chart-title">Wellness Profile Overview</div>
+          <canvas id="radarChart" height="220"></canvas>
+        </div>
+
+        <!-- Suggestions -->
+        <p class="section-title">💡 Personalised Suggestions</p>
+        <div class="suggestion-grid">
+          {% for s in suggestions %}
+          <div class="suggestion-card">
+            <div class="icon">{{ s.icon }}</div>
+            <h4>{{ s.title }}</h4>
+            <p>{{ s.desc }}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem">
+          <a href="{{ url_for('ending') }}" class="btn btn-primary btn-lg" style="flex:1">Finish →</a>
+          <a href="{{ url_for('restart') }}" class="btn btn-outline" style="flex:1">🔄 New Assessment</a>
+        </div>
+
+        <p style="font-size:0.78rem;color:var(--text-light);text-align:center;margin-top:1rem">
+          ⚕️ This tool is for informational purposes only and is not a substitute for professional medical advice.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    const anxietyScore = {{ anxiety_score }};
+    const depressionScore = {{ depression_score }};
+
+    // Anxiety doughnut
+    new Chart(document.getElementById('anxietyChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Your Score', 'Remaining'],
+        datasets: [{
+          data: [anxietyScore, 21 - anxietyScore],
+          backgroundColor: ['#7C3AED', 'rgba(124,58,237,0.12)'],
+          borderWidth: 0,
+          hoverOffset: 6,
+        }]
+      },
+      options: {
+        cutout: '72%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed + ' / 21' } }
+        }
+      }
+    });
+
+    // Depression doughnut
+    new Chart(document.getElementById('depressionChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Your Score', 'Remaining'],
+        datasets: [{
+          data: [depressionScore, 27 - depressionScore],
+          backgroundColor: ['#DB2777', 'rgba(219,39,119,0.12)'],
+          borderWidth: 0,
+          hoverOffset: 6,
+        }]
+      },
+      options: {
+        cutout: '72%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed + ' / 27' } }
+        }
+      }
+    });
+
+    // Radar chart
+    const basic = {{ basic | tojson }};
+    new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Sleep', 'Activity', 'Social', 'Low Stress', 'Low Anxiety', 'Low Depression'],
+        datasets: [{
+          label: 'Your Wellness',
+          data: [
+            (basic.sleep_hours / 10) * 10,
+            (basic.physical_activity / 7) * 10,
+            basic.social_interaction,
+            10 - basic.stress_level,
+            10 - (anxietyScore / 21 * 10),
+            10 - (depressionScore / 27 * 10),
+          ],
+          fill: true,
+          backgroundColor: 'rgba(79,70,229,0.15)',
+          borderColor: '#4F46E5',
+          pointBackgroundColor: '#4F46E5',
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 10,
+            ticks: { display: false },
+            grid: { color: 'rgba(79,70,229,0.1)' },
+            pointLabels: { font: { size: 11, weight: '600' }, color: '#4b5563' }
+          }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+  </script>
+</body>
+</html>

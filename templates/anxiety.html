@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anxiety Assessment — AI Mental Health</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .q-card {
+      background: rgba(255,255,255,0.75);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .q-number { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.5rem; }
+    .q-text { font-size: 1.2rem; font-weight: 600; color: var(--text-dark); margin-bottom: 1.5rem; line-height: 1.5; }
+    .score-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-light); margin-top: 0.5rem; }
+    .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+    .q-counter { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--text-mid); }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="page">
+    <div class="page-inner" style="max-width:620px">
+      <!-- Header -->
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <span class="tag">Step 2 of 3</span>
+        <h2 style="margin-top:0.8rem">😟 Anxiety Assessment</h2>
+        <p style="font-size:0.9rem">GAD-7 — Generalised Anxiety Disorder Scale</p>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" id="q-progress" style="width:14%;transition:width 0.5s ease"></div>
+      </div>
+
+      <div class="steps" id="step-dots">
+        {% for i in range(7) %}
+        <div class="step-dot {% if i==0 %}active{% endif %}"></div>
+        {% endfor %}
+      </div>
+
+      <form id="q-form" method="POST" action="{{ url_for('anxiety') }}">
+        {% set questions = [
+          "Feeling nervous, anxious, or on edge",
+          "Not being able to stop or control worrying",
+          "Worrying too much about different things",
+          "Trouble relaxing",
+          "Being so restless that it is hard to sit still",
+          "Becoming easily annoyed or irritable",
+          "Feeling afraid, as if something awful might happen"
+        ] %}
+        {% for q in questions %}
+        <div class="q-step" style="display:none">
+          <div class="q-card card">
+            <div>
+              <div class="q-number">QUESTION {{ loop.index }} OF 7</div>
+              <div class="q-text">{{ q }}</div>
+              <input type="hidden" name="q{{ loop.index }}" id="ans{{ loop.index }}" value="">
+              <div class="score-group" data-q="{{ loop.index }}">
+                <button type="button" class="score-btn" data-value="0">0<br><small>Not at all</small></button>
+                <button type="button" class="score-btn" data-value="1">1<br><small>Several days</small></button>
+                <button type="button" class="score-btn" data-value="2">2<br><small>Half the days</small></button>
+                <button type="button" class="score-btn" data-value="3">3<br><small>Nearly every day</small></button>
+              </div>
+              <div class="error-msg">⚠️ Please select an answer before continuing.</div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+        <div class="nav-btns">
+          <button type="button" id="q-prev" class="btn btn-outline" style="visibility:hidden">← Back</button>
+          <span class="q-counter" id="q-counter">1 / 7</span>
+          <button type="button" id="q-next" class="btn btn-primary">Next →</button>
+          <button type="button" id="q-submit" class="btn btn-accent" style="display:none">See Depression Qs →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    // Wire score buttons to hidden inputs
+    document.querySelectorAll('.score-group').forEach(group => {
+      const q = group.dataset.q;
+      group.querySelectorAll('.score-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          group.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          document.getElementById('ans' + q).value = btn.dataset.value;
+        });
+      });
+    });
+  </script>
+</body>
+</html>

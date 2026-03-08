@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You — AI Mental Health</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .ending-wrap { text-align: center; max-width: 600px; margin: 0 auto; }
+    .big-emoji { font-size: 5rem; animation: pulse 2s ease-in-out infinite; margin-bottom: 1rem; }
+    .quote-block {
+      background: rgba(79,70,229,0.07);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+    .quote-block p { font-family: 'Lora', serif; font-style: italic; font-size: 1.05rem; color: var(--text-dark); }
+    .quote-block span { font-size: 0.85rem; color: var(--text-mid); font-style: normal; font-family: 'DM Sans', sans-serif; }
+    .habit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .habit-card {
+      background: rgba(255,255,255,0.7);
+      border-radius: var(--radius-sm);
+      padding: 1.2rem 0.8rem;
+      border: 1px solid rgba(79,70,229,0.1);
+      animation: cardIn 0.5s ease both;
+    }
+    .habit-card .h-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .habit-card h4 { font-size: 0.88rem; margin-bottom: 0.3rem; }
+    .habit-card p { font-size: 0.78rem; color: var(--text-mid); }
+    .habit-card:nth-child(1) { animation-delay: 0.1s; }
+    .habit-card:nth-child(2) { animation-delay: 0.2s; }
+    .habit-card:nth-child(3) { animation-delay: 0.3s; }
+    .cta-row { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
+    @media(max-width:500px) { .habit-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="page">
+    <div class="page-inner">
+      <div class="card">
+        <div class="ending-wrap">
+          <div class="big-emoji">🌈</div>
+          <h1 style="margin-bottom:0.5rem">Thank You, {{ username }}!</h1>
+          <h2 style="font-size:1.2rem;font-weight:400;font-family:'Lora',serif;font-style:italic;color:var(--text-mid);margin-bottom:1rem">
+            for taking the first step towards understanding your mental wellness.
+          </h2>
+
+          <div class="quote-block">
+            <p>"Mental health is not a destination, but a process. It's about how you drive, not where you're going."</p>
+            <span>— Noam Shpancer, PhD</span>
+          </div>
+
+          <p style="margin-bottom:1.5rem">
+            Your mental health matters every single day. Small, consistent habits can create profound
+            changes in how you feel, think, and connect with others.
+          </p>
+
+          <div class="habit-grid">
+            <div class="habit-card">
+              <div class="h-icon">🔄</div>
+              <h4>Check In Regularly</h4>
+              <p>Repeat this assessment monthly to track your progress over time.</p>
+            </div>
+            <div class="habit-card">
+              <div class="h-icon">🤝</div>
+              <h4>Seek Support</h4>
+              <p>Don't hesitate to talk to a professional when things feel heavy.</p>
+            </div>
+            <div class="habit-card">
+              <div class="h-icon">🌱</div>
+              <h4>Build Habits</h4>
+              <p>Exercise, sleep, and connection are the foundations of mental wellness.</p>
+            </div>
+          </div>
+
+          <div style="background:rgba(34,197,94,0.08);border-radius:var(--radius-sm);padding:1rem;font-size:0.9rem;color:#166534;border:1px solid rgba(34,197,94,0.2);">
+            💚 Remember: <strong>asking for help is a sign of strength</strong>, not weakness. You are not alone on this journey.
+          </div>
+
+          <div class="cta-row">
+            <a href="{{ url_for('restart') }}" class="btn btn-primary btn-lg">🔄 Start New Assessment</a>
+            <a href="{{ url_for('welcome') }}" class="btn btn-outline btn-lg">Back to Home</a>
+          </div>
+
+          <p style="margin-top:1.5rem;font-size:0.8rem;color:var(--text-light)">
+            🔒 Your responses are private and not stored after this session.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

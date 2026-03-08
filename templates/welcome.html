@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Mental Health Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .welcome-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-mark {
+      font-size: 4rem;
+      animation: pulse 2.5s ease-in-out infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(79,70,229,0.4)); }
+      50%       { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(79,70,229,0.7)); }
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #1e1b4b, #4F46E5, #22C55E);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      animation: pageIn 0.8s ease both;
+    }
+    .hero-tagline {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-style: italic;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      animation: pageIn 0.8s 0.2s ease both;
+      opacity: 0;
+    }
+    .hero-desc {
+      max-width: 550px;
+      font-size: 1.05rem;
+      color: var(--text-mid);
+      margin-bottom: 2rem;
+      animation: pageIn 0.8s 0.35s ease both;
+      opacity: 0;
+    }
+    .name-form {
+      display: flex;
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 100px;
+      padding: 6px;
+      box-shadow: 0 8px 30px rgba(79,70,229,0.25);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6);
+      animation: pageIn 0.8s 0.5s ease both;
+      opacity: 0;
+    }
+    .name-form .icon-pre {
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      font-size: 1.3rem;
+    }
+    .name-form input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: #1e1b4b;
+      outline: none;
+      padding: 0.6rem 0;
+    }
+    .name-form input::placeholder { color: #9ca3af; }
+    .name-form button {
+      border-radius: 100px;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    .form-error {
+      color: #DC2626;
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+      animation: pageIn 0.3s ease both;
+    }
+    .features {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2.5rem;
+      animation: pageIn 0.8s 0.65s ease both;
+      opacity: 0;
+    }
+    .feature-pill {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 100px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 15px rgba(79,70,229,0.1);
+    }
+    .floating-shapes .shape {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .shape-1 { width: 600px; height: 600px; background: var(--primary); top: -200px; right: -200px; animation: blobFloat 10s ease-in-out infinite; }
+    .shape-2 { width: 400px; height: 400px; background: var(--accent); bottom: -150px; left: -100px; animation: blobFloat 12s ease-in-out infinite reverse; }
+    .shape-3 { width: 200px; height: 200px; background: #f0abfc; top: 40%; left: 15%; animation: blobFloat 8s ease-in-out infinite 2s; }
+  </style>
+</head>
+<body>
+  <div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="welcome-page">
+    <div class="logo-mark">🧠</div>
+    <h1 class="hero-title">Welcome</h1>
+    <p class="hero-tagline">"Understand Your Mind, Improve Your Life"</p>
+    <p class="hero-desc">
+      A clinically-inspired AI assessment that helps you understand your mental wellness through
+      validated questionnaires (GAD-7 &amp; PHQ-9) and provides personalised insights — in just 3–4 minutes.
+    </p>
+
+    <!-- Simple username-only entry -->
+    <form method="POST" action="{{ url_for('welcome') }}" style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:0.5rem">
+      <div class="name-form">
+        <span class="icon-pre">👤</span>
+        <input type="text" name="username" placeholder="Enter your name to begin…" required minlength="2" autocomplete="off">
+        <button type="submit" class="btn btn-primary">Enter →</button>
+      </div>
+      {% if error %}
+      <p class="form-error">⚠️ {{ error }}</p>
+      {% endif %}
+    </form>
+
+    <div class="features">
+      <div class="feature-pill">🔒 Private &amp; Anonymous</div>
+      <div class="feature-pill">⚡ 3–4 Minutes</div>
+      <div class="feature-pill">🤖 AI-Powered Insights</div>
+      <div class="feature-pill">📊 Visual Results</div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
